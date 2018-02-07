@@ -1,0 +1,20 @@
+.text			0x00000000400038		0x3dc build/gr712/debug/basicsw/lib/time/src/cuc.o
+                                            cuc_set_us
+                                            cuc_fine_us
+                                            cuc_get_us
+.text			0x00000000300012		0x180 build/gr712/debug/basicsw/lib/tdbs/src/cuc.o
+                                            cuc_set_us
+                                            cuc_fine_us
+                                            cuc_get_us
+.text			0x00000000400038		0x1dc build/gr712/debug/basicsw/lib/time/src/cuc.o
+                                            cuc_set_us
+                                            cuc_fine_us
+                                            cuc_get_us
+.data			0x00000000300012		0x180 build/gr712/debug/basicsw/lib/tdbs/src/cuc.o
+                                            cuc_set_us
+                                            cuc_fine_us
+                                            cuc_get_us
+.data			0x00000000300012		0x180 build/gr712/debug/basicsw/lib/time/src/cuc.o
+                                            cuc_set_us
+                                            cuc_fine_us
+                                            cuc_get_us
