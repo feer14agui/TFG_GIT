@@ -4,16 +4,68 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.pyplot
 
-memory = 0
-
 def HexadecimalToDecimal(n): #función para convertir los valores hexadecimales a decimales
 	return str(int(n,16))
-
-infile = open('texto.map', 'r')
 
 def porc(x,y):
     result = (x * 100.0) / (y)
     return result
+
+def XML ():
+    fichero =  open('fichero.xml', 'w')
+    xml = "<?xml version='1.0' encoding='UTF-8' ?>\n"
+    xml += '<MemoriaTotal=" ' + str(memory) + ' bytes">'
+    xml += '</MemoriaTotal>\n'
+    xml += '<DatosTipoTexto=" ' + str(memory_text) + ' bytes">'
+    xml += '</DatosTipoTexto>\n'
+    xml += '<DatosTipoData=" ' + str(memory_data) + ' bytes">'
+    xml += '</DatosTipoData>\n'
+    xml += '<DatosModTime=" ' + str(memory_time) + ' bytes">'
+    xml += '</DatosModTime>\n'
+    xml += '<DatosModTdbs=" ' + str(memory_tdbs) + ' bytes">'
+    xml += '</DatosModTdbs>\n'
+    xml += '<DatosTimeText=" ' + str(memory_time_text) + ' bytes">'
+    xml += '</DatosTimeText>\n'
+    xml += '<DatosTdbsText=" ' + str(memory_tdbs_text) + ' bytes">'
+    xml += '</DatosTdbsText>\n'
+    xml += '<DatosTimeData=" ' + str(memory_time_data) + ' bytes">'
+    xml += '</DatosTimeData>\n'
+    xml += '<DatosTdbsData=" ' + str(memory_tdbs_data) + ' bytes">'
+    xml += '</DatosTdbsData>\n'
+    fichero.write(xml)
+
+def AddDicc():
+	#Con esto meto el tamaño de datos en los diccionarios segun el modulo y el tipo de datos
+    if mod == 'time': #si el modulo que tengo es time
+        if types == '.text':
+            Modulo['Type']['Time']['Text'] = int(size) +  Modulo['Type']['Time']['Text']#sumo la memoria de cada modulo y tipo
+        if types == '.data':
+            Modulo['Type']['Time']['Data'] = int(size) +  Modulo['Type']['Time']['Data']#sumo la memoria de cada modulo y tipo
+    elif mod == 'tdbs': #si el modulo que tengo es tdbs
+        if types == '.text':
+            Modulo['Type']['Tdbs']['Text'] = int(size) +  Modulo['Type']['Tdbs']['Text']#sumo la memoria de cada modulo y tipo
+        if types == '.data':
+            Modulo['Type']['Tdbs']['Data'] = int(size) +  Modulo['Type']['Tdbs']['Data']#sumo la memoria de cada modulo y tipo
+
+def TextMemory():
+    memory_text = Modulo['Type']['Time']['Text'] + Modulo['Type']['Tdbs']['Text']
+    return memory_text
+
+def DataMemory():
+    memory_data = Modulo['Type']['Time']['Data'] + Modulo['Type']['Tdbs']['Data']
+    return memory_data
+
+def TimeMemory():
+    memory_time = Modulo['Type']['Time']['Text'] + Modulo['Type']['Time']['Data']
+    return memory_time
+
+def TdbsMemory():
+    memory_tdbs = Modulo['Type']['Tdbs']['Text'] + Modulo['Type']['Tdbs']['Data']
+    return memory_tdbs
+
+infile = open('texto.map', 'r')
+
+memory = 0
 
 i=0
 
@@ -41,74 +93,65 @@ for line in infile:
         print 'Tamaño de datos: ' + size + ' bytes'
         print 'Módulo: ' + mod + '\n'
 
-	#Con esto meto el tamaño de datos en los diccionarios segun el modulo y el tipo de datos
-    if mod == 'time': #si el modulo que tengo es time
-        if types == '.text':
-            Modulo['Type']['Time']['Text'] = int(size) +  Modulo['Type']['Time']['Text']#sumo la memoria de cada modulo y tipo
-        if types == '.data':
-            Modulo['Type']['Time']['Data'] = int(size) +  Modulo['Type']['Time']['Data']#sumo la memoria de cada modulo y tipo
-    elif mod == 'tdbs': #si el modulo que tengo es tdbs
-        if types == '.text':
-            Modulo['Type']['Tdbs']['Text'] = int(size) +  Modulo['Type']['Tdbs']['Text']#sumo la memoria de cada modulo y tipo
-        if types == '.data':
-            Modulo['Type']['Tdbs']['Data'] = int(size) +  Modulo['Type']['Tdbs']['Data']#sumo la memoria de cada modulo y tipo
+    AddDicc()#Meto los valores en el diccionario
 
 # Con esto voy a recopilar datos para escribir lo que ocupa cada tipo de datos
-memoria_text = Modulo['Type']['Time']['Text'] + Modulo['Type']['Tdbs']['Text']
-memoria_data = Modulo['Type']['Time']['Data'] + Modulo['Type']['Tdbs']['Data']
+memory_text = TextMemory()
+memory_data = DataMemory()
+
 #saco los porcentajes
-porcentaje_text = porc((memoria_text), memory)
-porcentaje_data = porc((memoria_data), memory)
+porcentaje_text = porc((memory_text), memory)
+porcentaje_data = porc((memory_data), memory)
+
 #Uno los datos y las etiquetas para la representación de datos
-tipos_datos=[porcentaje_text, porcentaje_data]
+data_types=[porcentaje_text, porcentaje_data]
 label = ["Text " + str(porcentaje_text) + " %", "Data " + str(porcentaje_data) + " %"]
 explode = [0,0]
+
 #represento los datos
 plt.subplot(3,1,1)
-plt.pie(tipos_datos, labels = label, explode = explode)  # Dibuja un gráfico de quesitos
+plt.pie(data_types, labels = label, explode = explode)  # Dibuja un gráfico de quesitos
 
 # Con esto voy a recopilar datos para escribir lo que ocupa cada tipo de datos
-memoria_time = Modulo['Type']['Time']['Text'] + Modulo['Type']['Time']['Data']
-memoria_tdbs = Modulo['Type']['Tdbs']['Text'] + Modulo['Type']['Tdbs']['Data']
+memory_time = TimeMemory()
+memory_tdbs = TdbsMemory()
+
 #saco los porcentajes
-porcentaje_time = porc((memoria_time), memory)
-porcentaje_tdbs = porc((memoria_tdbs), memory)
+porcentaje_time = porc((memory_time), memory)
+porcentaje_tdbs = porc((memory_tdbs), memory)
+
 #Uno los datos y las etiquetas para la representación de datos
-visitas = [porcentaje_time, porcentaje_tdbs]
+data_types = [porcentaje_time, porcentaje_tdbs]
 label = ["Time " + str(porcentaje_time) + " %", "Tdbs " + str(porcentaje_tdbs) + "%"]
 explode = [0, 0]
+
 #represento los datos
 plt.subplot(3,1,2)
-plt.pie(visitas, labels = label, explode = explode)  # Dibuja un gráfico de quesitos
+plt.pie(data_types, labels = label, explode = explode)  # Dibuja un gráfico de quesitos
 
 # Ahora quiero ver dentro de TIME cuantos datos son tipo TEXT
-memoria_time_text = Modulo['Type']['Time']['Text']
+memory_time_text = Modulo['Type']['Time']['Text']
 # Ahora quiero ver dentro de TDBS cuantos datos son tipo TEXT
-memoria_tdbs_text = Modulo['Type']['Tdbs']['Text']
+memory_tdbs_text = Modulo['Type']['Tdbs']['Text']
 # Ahora quiero ver dentro de TIME cuantos datos son tipo DATA
-memoria_time_data = Modulo['Type']['Time']['Data']
+memory_time_data = Modulo['Type']['Time']['Data']
 # Ahora quiero ver dentro de TDBS cuantos datos son tipo DATA
-memoria_tdbs_data = Modulo['Type']['Tdbs']['Data']
+memory_tdbs_data = Modulo['Type']['Tdbs']['Data']
+
 #saco los porcentajes
-porcentaje_time_text = porc((memoria_time_text), memory)
-porcentaje_tdbs_text = porc((memoria_tdbs_text), memory)
-porcentaje_time_data = porc((memoria_time_data), memory)
-porcentaje_tdbs_data = porc((memoria_tdbs_data), memory)
+porcentaje_time_text = porc((memory_time_text), memory)
+porcentaje_tdbs_text = porc((memory_tdbs_text), memory)
+porcentaje_time_data = porc((memory_time_data), memory)
+porcentaje_tdbs_data = porc((memory_tdbs_data), memory)
+
 #Uno los datos y las etiquetas para la representación de datos
-visitas = [porcentaje_time_text, porcentaje_tdbs_text, porcentaje_time_data, porcentaje_tdbs_data]
+data_types = [porcentaje_time_text, porcentaje_tdbs_text, porcentaje_time_data, porcentaje_tdbs_data]
 label = ["TEXT(Time)" + str(porcentaje_time_text) + " %", "TEXT(tdbs) " + str(porcentaje_tdbs_text) + "%", "DATA(time) " + str(porcentaje_time_data) + "%", "DATA(tdbs) " + str(porcentaje_tdbs_data) + "%"]
 explode = [0, 0, 0, 0]
+
 #represento los datos
 plt.subplot(3,1,3)
-plt.pie(visitas, labels = label, explode = explode)  # Dibuja un gráfico de quesitos
+plt.pie(data_types, labels = label, explode = explode)  # Dibuja un gráfico de quesitos
 plt.show()#muestro las tres gráficas
-
-def XML ():
-
-    xml = "<?xml version='1.0' encoding='UTF-8' ?>"
-    xml += '<Datos tipo texto="' + str(memoria_text) + '">'
-    xml += '</Datos tipo texto>'
-    print xml
-    print('')
 
 XML()
