@@ -12,7 +12,7 @@ def porc(x,y):
     return result
 
 def XML ():
-    fichero =  open('fichero.xml', 'w')
+    fich =  open('fichero.xml', 'w')
     xml = "<?xml version='1.0' encoding='UTF-8' ?>\n"
     xml += '<MemoriaTotal=" ' + str(memory) + ' bytes">'
     xml += '</MemoriaTotal>\n'
@@ -32,7 +32,7 @@ def XML ():
     xml += '</DatosTimeData>\n'
     xml += '<DatosTdbsData=" ' + str(memory_tdbs_data) + ' bytes">'
     xml += '</DatosTdbsData>\n'
-    fichero.write(xml)
+    fich.write(xml)
 
 def AddDicc():
 	#Con esto meto el tamaño de datos en los diccionarios segun el modulo y el tipo de datos
@@ -100,12 +100,12 @@ memory_text = TextMemory()
 memory_data = DataMemory()
 
 #saco los porcentajes
-porcentaje_text = porc((memory_text), memory)
-porcentaje_data = porc((memory_data), memory)
+percentage_text = porc((memory_text), memory)
+percentage_data = porc((memory_data), memory)
 
 #Uno los datos y las etiquetas para la representación de datos
-data_types=[porcentaje_text, porcentaje_data]
-label = ["Text " + str(porcentaje_text) + " %", "Data " + str(porcentaje_data) + " %"]
+data_types=[percentage_text, percentage_data]
+label = ["Text " + str(percentage_text) + " %", "Data " + str(percentage_data) + " %"]
 explode = [0,0]
 
 #represento los datos
@@ -117,12 +117,12 @@ memory_time = TimeMemory()
 memory_tdbs = TdbsMemory()
 
 #saco los porcentajes
-porcentaje_time = porc((memory_time), memory)
-porcentaje_tdbs = porc((memory_tdbs), memory)
+percentage_time = porc((memory_time), memory)
+percentage_tdbs = porc((memory_tdbs), memory)
 
 #Uno los datos y las etiquetas para la representación de datos
-data_types = [porcentaje_time, porcentaje_tdbs]
-label = ["Time " + str(porcentaje_time) + " %", "Tdbs " + str(porcentaje_tdbs) + "%"]
+data_types = [percentage_time, percentage_tdbs]
+label = ["Time " + str(percentage_time) + " %", "Tdbs " + str(percentage_tdbs) + "%"]
 explode = [0, 0]
 
 #represento los datos
@@ -139,14 +139,14 @@ memory_time_data = Modulo['Type']['Time']['Data']
 memory_tdbs_data = Modulo['Type']['Tdbs']['Data']
 
 #saco los porcentajes
-porcentaje_time_text = porc((memory_time_text), memory)
-porcentaje_tdbs_text = porc((memory_tdbs_text), memory)
-porcentaje_time_data = porc((memory_time_data), memory)
-porcentaje_tdbs_data = porc((memory_tdbs_data), memory)
+percentage_time_text = porc((memory_time_text), memory)
+percentage_tdbs_text = porc((memory_tdbs_text), memory)
+percentage_time_data = porc((memory_time_data), memory)
+percentage_tdbs_data = porc((memory_tdbs_data), memory)
 
 #Uno los datos y las etiquetas para la representación de datos
-data_types = [porcentaje_time_text, porcentaje_tdbs_text, porcentaje_time_data, porcentaje_tdbs_data]
-label = ["TEXT(Time)" + str(porcentaje_time_text) + " %", "TEXT(tdbs) " + str(porcentaje_tdbs_text) + "%", "DATA(time) " + str(porcentaje_time_data) + "%", "DATA(tdbs) " + str(porcentaje_tdbs_data) + "%"]
+data_types = [percentage_time_text, percentage_tdbs_text, percentage_time_data, percentage_tdbs_data]
+label = ["TEXT(Time)" + str(percentage_time_text) + " %", "TEXT(tdbs) " + str(percentage_tdbs_text) + "%", "DATA(time) " + str(percentage_time_data) + "%", "DATA(tdbs) " + str(percentage_tdbs_data) + "%"]
 explode = [0, 0, 0, 0]
 
 #represento los datos
