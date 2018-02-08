@@ -3,16 +3,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.pyplot
-from matplotlib.gridspec import GridSpec
-
-class datos():
-    tipo = ''
-    modulo = ''
-    size = ''
-
-class size():
-    time = ''
-    tdbs = ''
 
 memory = 0
 
@@ -30,40 +20,38 @@ i=0
 Modulo = {'Type' : {'Time':{'Text':0, 'Data':0}, 'Tdbs' :{'Text':0, 'Data':0}}}
 
 for line in infile:
-	#texto = infile.readline()
-    texto=line
-    dicc=texto.split("/")
-    size=dicc[0]
-    size=size.split("		")
-    types=size[0]
-    if size[0][0:1] != ' ':#uso este if para quitarme las líneas que no debo de coger
+
+    dicc=line.split("/")
+    cad=dicc[0]
+    cad=cad.split("		")
+    types=cad[0]
+    if cad[0][0:1] != ' ':#uso este if para quitarme las líneas que no debo de coger
         i = i + 1
-        size=size[2]
-        size=size.split(" ")
-        mod = dicc[5]
-        size=size[0]
-        datos.modulo = mod
-        size = HexadecimalToDecimal(size)
-        memory = memory + int(size)
+        cad=cad[2]#me quedo con la parte donde está el tamaño
+        cad=cad.split(" ")
+        mod = dicc[5]#obtengo el módulo de cada línea
+        size=cad[0]#obtengo el tamaño de los datos
+        size = HexadecimalToDecimal(size)#paso el tamaño a decimal
+        memory = memory + int(size)#sumo la memoria total
 
-	#Con esto meto el tamaño de datos en los diccionarios segun el modulo y el tipo de datos
-    if mod == 'time': #si el modulo que tengo es time
-            if types == '.text':
-                Modulo['Type']['Time']['Text'] = int(size) +  Modulo['Type']['Time']['Text']
-            if types == '.data':
-                Modulo['Type']['Time']['Data'] = int(size) +  Modulo['Type']['Time']['Data']
-    elif mod == 'tdbs': #si el modulo que tengo es tdbs
-            if types == '.text':
-                Modulo['Type']['Tdbs']['Text'] = int(size) +  Modulo['Type']['Tdbs']['Text']
-            if types == '.data':
-                Modulo['Type']['Tdbs']['Data'] = int(size) +  Modulo['Type']['Tdbs']['Data']
-
-	#Esto me sirve para ver que va cogiendo bien la lineas
+    #Esto me sirve para ver que va cogiendo bien la lineas
     if types[0:1] != ' ':#uso esto para quitarme las líneas que no debo de coger
         print 'Datos de la línea número ' + str(i) + '\n'
         print 'Tipo de datos: ' + types
         print 'Tamaño de datos: ' + size + ' bytes'
         print 'Módulo: ' + mod + '\n'
+
+	#Con esto meto el tamaño de datos en los diccionarios segun el modulo y el tipo de datos
+    if mod == 'time': #si el modulo que tengo es time
+        if types == '.text':
+            Modulo['Type']['Time']['Text'] = int(size) +  Modulo['Type']['Time']['Text']#sumo la memoria de cada modulo y tipo
+        if types == '.data':
+            Modulo['Type']['Time']['Data'] = int(size) +  Modulo['Type']['Time']['Data']#sumo la memoria de cada modulo y tipo
+    elif mod == 'tdbs': #si el modulo que tengo es tdbs
+        if types == '.text':
+            Modulo['Type']['Tdbs']['Text'] = int(size) +  Modulo['Type']['Tdbs']['Text']#sumo la memoria de cada modulo y tipo
+        if types == '.data':
+            Modulo['Type']['Tdbs']['Data'] = int(size) +  Modulo['Type']['Tdbs']['Data']#sumo la memoria de cada modulo y tipo
 
 # Con esto voy a recopilar datos para escribir lo que ocupa cada tipo de datos
 memoria_text = Modulo['Type']['Time']['Text'] + Modulo['Type']['Tdbs']['Text']
@@ -113,4 +101,14 @@ explode = [0, 0, 0, 0]
 #represento los datos
 plt.subplot(3,1,3)
 plt.pie(visitas, labels = label, explode = explode)  # Dibuja un gráfico de quesitos
-plt.show()
+plt.show()#muestro las tres gráficas
+
+def XML ():
+
+    xml = "<?xml version='1.0' encoding='UTF-8' ?>"
+    xml += '<Datos tipo texto="' + str(memoria_text) + '">'
+    xml += '</Datos tipo texto>'
+    print xml
+    print('')
+
+XML()
