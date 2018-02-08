@@ -38,29 +38,29 @@ def AddDicc():
 	#Con esto meto el tamaño de datos en los diccionarios segun el modulo y el tipo de datos
     if mod == 'time': #si el modulo que tengo es time
         if types == '.text':
-            Modulo['Type']['Time']['Text'] = int(size) +  Modulo['Type']['Time']['Text']#sumo la memoria de cada modulo y tipo
+            module['Type']['Time']['Text'] = int(size) +  module['Type']['Time']['Text']#sumo la memoria de cada modulo y tipo
         if types == '.data':
-            Modulo['Type']['Time']['Data'] = int(size) +  Modulo['Type']['Time']['Data']#sumo la memoria de cada modulo y tipo
+            module['Type']['Time']['Data'] = int(size) +  module['Type']['Time']['Data']#sumo la memoria de cada modulo y tipo
     elif mod == 'tdbs': #si el modulo que tengo es tdbs
         if types == '.text':
-            Modulo['Type']['Tdbs']['Text'] = int(size) +  Modulo['Type']['Tdbs']['Text']#sumo la memoria de cada modulo y tipo
+            module['Type']['Tdbs']['Text'] = int(size) +  module['Type']['Tdbs']['Text']#sumo la memoria de cada modulo y tipo
         if types == '.data':
-            Modulo['Type']['Tdbs']['Data'] = int(size) +  Modulo['Type']['Tdbs']['Data']#sumo la memoria de cada modulo y tipo
+            module['Type']['Tdbs']['Data'] = int(size) +  module['Type']['Tdbs']['Data']#sumo la memoria de cada modulo y tipo
 
 def TextMemory():
-    memory_text = Modulo['Type']['Time']['Text'] + Modulo['Type']['Tdbs']['Text']
+    memory_text = module['Type']['Time']['Text'] + module['Type']['Tdbs']['Text']
     return memory_text
 
 def DataMemory():
-    memory_data = Modulo['Type']['Time']['Data'] + Modulo['Type']['Tdbs']['Data']
+    memory_data = module['Type']['Time']['Data'] + module['Type']['Tdbs']['Data']
     return memory_data
 
 def TimeMemory():
-    memory_time = Modulo['Type']['Time']['Text'] + Modulo['Type']['Time']['Data']
+    memory_time = module['Type']['Time']['Text'] + module['Type']['Time']['Data']
     return memory_time
 
 def TdbsMemory():
-    memory_tdbs = Modulo['Type']['Tdbs']['Text'] + Modulo['Type']['Tdbs']['Data']
+    memory_tdbs = module['Type']['Tdbs']['Text'] + module['Type']['Tdbs']['Data']
     return memory_tdbs
 
 infile = open('texto.map', 'r')
@@ -69,7 +69,7 @@ memory = 0
 
 i=0
 
-Modulo = {'Type' : {'Time':{'Text':0, 'Data':0}, 'Tdbs' :{'Text':0, 'Data':0}}}
+module = {'Type' : {'Time':{'Text':0, 'Data':0}, 'Tdbs' :{'Text':0, 'Data':0}}}
 
 for line in infile:
 
@@ -130,13 +130,13 @@ plt.subplot(3,1,2)
 plt.pie(data_types, labels = label, explode = explode)  # Dibuja un gráfico de quesitos
 
 # Ahora quiero ver dentro de TIME cuantos datos son tipo TEXT
-memory_time_text = Modulo['Type']['Time']['Text']
+memory_time_text = module['Type']['Time']['Text']
 # Ahora quiero ver dentro de TDBS cuantos datos son tipo TEXT
-memory_tdbs_text = Modulo['Type']['Tdbs']['Text']
+memory_tdbs_text = module['Type']['Tdbs']['Text']
 # Ahora quiero ver dentro de TIME cuantos datos son tipo DATA
-memory_time_data = Modulo['Type']['Time']['Data']
+memory_time_data = module['Type']['Time']['Data']
 # Ahora quiero ver dentro de TDBS cuantos datos son tipo DATA
-memory_tdbs_data = Modulo['Type']['Tdbs']['Data']
+memory_tdbs_data = module['Type']['Tdbs']['Data']
 
 #saco los porcentajes
 percentage_time_text = porc((memory_time_text), memory)
