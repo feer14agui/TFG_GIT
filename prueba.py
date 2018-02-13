@@ -3,6 +3,12 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.pyplot
+from django.shortcuts import render
+from django.shortcuts import redirect
+from django.http import HttpResponse
+import xml.etree.ElementTree as etree
+from xml.dom.minidom import Document, parse
+import xml.dom.minidom as dom
 
 def HexadecimalToDecimal(n): #función para convertir los valores hexadecimales a decimales
 	return str(int(n,16))
@@ -12,27 +18,69 @@ def porc(x,y):
     return result
 
 def XML ():
-    fich =  open('fichero.xml', 'w')
-    xml = "<?xml version='1.0' encoding='UTF-8' ?>\n"
-    xml += '<MemoriaTotal=" ' + str(memory) + ' bytes">'
-    xml += '</MemoriaTotal>\n'
-    xml += '<DatosTipoTexto=" ' + str(memory_text) + ' bytes">'
-    xml += '</DatosTipoTexto>\n'
-    xml += '<DatosTipoData=" ' + str(memory_data) + ' bytes">'
-    xml += '</DatosTipoData>\n'
-    xml += '<DatosModTime=" ' + str(memory_time) + ' bytes">'
-    xml += '</DatosModTime>\n'
-    xml += '<DatosModTdbs=" ' + str(memory_tdbs) + ' bytes">'
-    xml += '</DatosModTdbs>\n'
-    xml += '<DatosTimeText=" ' + str(memory_time_text) + ' bytes">'
-    xml += '</DatosTimeText>\n'
-    xml += '<DatosTdbsText=" ' + str(memory_tdbs_text) + ' bytes">'
-    xml += '</DatosTdbsText>\n'
-    xml += '<DatosTimeData=" ' + str(memory_time_data) + ' bytes">'
-    xml += '</DatosTimeData>\n'
-    xml += '<DatosTdbsData=" ' + str(memory_tdbs_data) + ' bytes">'
-    xml += '</DatosTdbsData>\n'
-    fich.write(xml)
+	doc = Document()
+	cont = doc.createElement("Contenidos")
+	doc.appendChild(cont)
+	data = doc.createElement("Datos")
+	cont.appendChild(data)
+
+	atributo = doc.createElement("atributo")
+	data.appendChild(atributo)
+	atributo.setAttribute("Nombre", "Memoria Total")
+	ptext = doc.createTextNode(str(memory) + ' bytes')
+	atributo.appendChild(ptext)
+
+	atributo = doc.createElement("atributo")
+	data.appendChild(atributo)
+	atributo.setAttribute("Nombre", "Memoria Text")
+	ptext = doc.createTextNode(str(memory_text) + ' bytes')
+	atributo.appendChild(ptext)
+
+	atributo = doc.createElement("atributo")
+	data.appendChild(atributo)
+	atributo.setAttribute("Nombre", "Memoria Data")
+	ptext = doc.createTextNode(str(memory_data) + ' bytes')
+	atributo.appendChild(ptext)
+
+	atributo = doc.createElement("atributo")
+	data.appendChild(atributo)
+	atributo.setAttribute("Nombre", "Memoria Time")
+	ptext = doc.createTextNode(str(memory_time) + ' bytes')
+	atributo.appendChild(ptext)
+
+	atributo = doc.createElement("atributo")
+	data.appendChild(atributo)
+	atributo.setAttribute("Nombre", "Memoria Tdbs")
+	ptext = doc.createTextNode(str(memory_tdbs) + ' bytes')
+	atributo.appendChild(ptext)
+
+	atributo = doc.createElement("atributo")
+	data.appendChild(atributo)
+	atributo.setAttribute("Nombre", "Memoria Time Text")
+	ptext = doc.createTextNode(str(memory_time_text) + ' bytes')
+	atributo.appendChild(ptext)
+
+	atributo = doc.createElement("atributo")
+	data.appendChild(atributo)
+	atributo.setAttribute("Nombre", "Memoria Tdbs Text")
+	ptext = doc.createTextNode(str(memory_tdbs_text) + ' bytes')
+	atributo.appendChild(ptext)
+
+	atributo = doc.createElement("atributo")
+	data.appendChild(atributo)
+	atributo.setAttribute("Nombre", "Memoria Time Data")
+	ptext = doc.createTextNode(str(memory_time_data) + ' bytes')
+	atributo.appendChild(ptext)
+	
+	atributo = doc.createElement("atributo")
+	data.appendChild(atributo)
+	atributo.setAttribute("Nombre", "Memoria Tdbs Data")
+	ptext = doc.createTextNode(str(memory_tdbs_data) + ' bytes')
+	atributo.appendChild(ptext)
+
+	fich =  open('fichero.xml', 'w')
+	xml = doc.toprettyxml(indent=" ")
+	fich.write(xml)
 
 def AddDicc():
 	#Con esto meto el tamaño de datos en los diccionarios segun el modulo y el tipo de datos
