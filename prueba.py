@@ -21,6 +21,7 @@ def XML ():
 	doc = Document()
 	cont = doc.createElement("Contenidos")
 	doc.appendChild(cont)
+
 	data = doc.createElement("Datos")
 	cont.appendChild(data)
 
@@ -33,49 +34,49 @@ def XML ():
 	atributo = doc.createElement("atributo")
 	data.appendChild(atributo)
 	atributo.setAttribute("Nombre", "Memoria Text")
-	ptext = doc.createTextNode(str(memory_text) + ' bytes')
+	ptext = doc.createTextNode(str(memory_text) + ' bytes -- ' + str(percentage_text) + '% ')
 	atributo.appendChild(ptext)
 
 	atributo = doc.createElement("atributo")
 	data.appendChild(atributo)
 	atributo.setAttribute("Nombre", "Memoria Data")
-	ptext = doc.createTextNode(str(memory_data) + ' bytes')
+	ptext = doc.createTextNode(str(memory_data) + ' bytes -- ' + str(percentage_data) + '% ')
 	atributo.appendChild(ptext)
 
 	atributo = doc.createElement("atributo")
 	data.appendChild(atributo)
 	atributo.setAttribute("Nombre", "Memoria Time")
-	ptext = doc.createTextNode(str(memory_time) + ' bytes')
+	ptext = doc.createTextNode(str(memory_time) + ' bytes -- ' + str(percentage_time) + '% ')
 	atributo.appendChild(ptext)
 
 	atributo = doc.createElement("atributo")
 	data.appendChild(atributo)
 	atributo.setAttribute("Nombre", "Memoria Tdbs")
-	ptext = doc.createTextNode(str(memory_tdbs) + ' bytes')
+	ptext = doc.createTextNode(str(memory_tdbs) + ' bytes -- ' + str(percentage_tdbs) + '% ')
 	atributo.appendChild(ptext)
 
 	atributo = doc.createElement("atributo")
 	data.appendChild(atributo)
 	atributo.setAttribute("Nombre", "Memoria Time Text")
-	ptext = doc.createTextNode(str(memory_time_text) + ' bytes')
+	ptext = doc.createTextNode(str(memory_time_text) + ' bytes -- ' + str(percentage_time_text) + '% ')
 	atributo.appendChild(ptext)
 
 	atributo = doc.createElement("atributo")
 	data.appendChild(atributo)
 	atributo.setAttribute("Nombre", "Memoria Tdbs Text")
-	ptext = doc.createTextNode(str(memory_tdbs_text) + ' bytes')
+	ptext = doc.createTextNode(str(memory_tdbs_text) + ' bytes -- ' + str(percentage_tdbs_text) + '% ')
 	atributo.appendChild(ptext)
 
 	atributo = doc.createElement("atributo")
 	data.appendChild(atributo)
 	atributo.setAttribute("Nombre", "Memoria Time Data")
-	ptext = doc.createTextNode(str(memory_time_data) + ' bytes')
+	ptext = doc.createTextNode(str(memory_time_data) + ' bytes -- ' + str(percentage_time_data) + '% ')
 	atributo.appendChild(ptext)
-	
+
 	atributo = doc.createElement("atributo")
 	data.appendChild(atributo)
 	atributo.setAttribute("Nombre", "Memoria Tdbs Data")
-	ptext = doc.createTextNode(str(memory_tdbs_data) + ' bytes')
+	ptext = doc.createTextNode(str(memory_tdbs_data) + ' bytes -- ' + str(percentage_tdbs_data) + '% ')
 	atributo.appendChild(ptext)
 
 	fich =  open('fichero.xml', 'w')
@@ -86,30 +87,46 @@ def AddDicc():
 	#Con esto meto el tamaño de datos en los diccionarios segun el modulo y el tipo de datos
     if mod == 'time': #si el modulo que tengo es time
         if types == '.text':
-            module['Type']['Time']['Text'] = int(size) +  module['Type']['Time']['Text']#sumo la memoria de cada modulo y tipo
+            module['Time']['Text'] = int(size) +  module['Time']['Text']#sumo la memoria de cada modulo y tipo
         if types == '.data':
-            module['Type']['Time']['Data'] = int(size) +  module['Type']['Time']['Data']#sumo la memoria de cada modulo y tipo
+            module['Time']['Data'] = int(size) +  module['Time']['Data']#sumo la memoria de cada modulo y tipo
     elif mod == 'tdbs': #si el modulo que tengo es tdbs
         if types == '.text':
-            module['Type']['Tdbs']['Text'] = int(size) +  module['Type']['Tdbs']['Text']#sumo la memoria de cada modulo y tipo
+            module['Tdbs']['Text'] = int(size) +  module['Tdbs']['Text']#sumo la memoria de cada modulo y tipo
         if types == '.data':
-            module['Type']['Tdbs']['Data'] = int(size) +  module['Type']['Tdbs']['Data']#sumo la memoria de cada modulo y tipo
+            module['Tdbs']['Data'] = int(size) +  module['Tdbs']['Data']#sumo la memoria de cada modulo y tipo
 
 def TextMemory():
-    memory_text = module['Type']['Time']['Text'] + module['Type']['Tdbs']['Text']
+    memory_text = module['Time']['Text'] + module['Tdbs']['Text']
     return memory_text
 
 def DataMemory():
-    memory_data = module['Type']['Time']['Data'] + module['Type']['Tdbs']['Data']
+    memory_data = module['Time']['Data'] + module['Tdbs']['Data']
     return memory_data
 
 def TimeMemory():
-    memory_time = module['Type']['Time']['Text'] + module['Type']['Time']['Data']
+    memory_time = module['Time']['Text'] + module['Time']['Data']
     return memory_time
 
 def TdbsMemory():
-    memory_tdbs = module['Type']['Tdbs']['Text'] + module['Type']['Tdbs']['Data']
+    memory_tdbs = module['Tdbs']['Text'] + module['Tdbs']['Data']
     return memory_tdbs
+
+def TimeTextMemory():
+	memory_time_text = module['Time']['Text']
+	return memory_time_text
+
+def TdbsTextMemory():
+	memory_tdbs_text = module['Tdbs']['Text']
+	return memory_tdbs_text
+
+def DataTimeMemory():
+	memory_time_data = module['Time']['Data']
+	return memory_time_data
+
+def DataTdbsMemory():
+	memory_tdbs_data = module['Tdbs']['Data']
+	return memory_tdbs_data
 
 infile = open('texto.map', 'r')
 
@@ -117,7 +134,7 @@ memory = 0
 
 i=0
 
-module = {'Type' : {'Time':{'Text':0, 'Data':0}, 'Tdbs' :{'Text':0, 'Data':0}}}
+module = {'Time':{'Text':0, 'Data':0}, 'Tdbs' :{'Text':0, 'Data':0}}
 
 for line in infile:
 
@@ -178,13 +195,15 @@ plt.subplot(3,1,2)
 plt.pie(data_types, labels = label, explode = explode)  # Dibuja un gráfico de quesitos
 
 # Ahora quiero ver dentro de TIME cuantos datos son tipo TEXT
-memory_time_text = module['Type']['Time']['Text']
+memory_time_text = TimeTextMemory()
+
+
 # Ahora quiero ver dentro de TDBS cuantos datos son tipo TEXT
-memory_tdbs_text = module['Type']['Tdbs']['Text']
+memory_tdbs_text = TdbsTextMemory()
 # Ahora quiero ver dentro de TIME cuantos datos son tipo DATA
-memory_time_data = module['Type']['Time']['Data']
+memory_time_data = DataTimeMemory()
 # Ahora quiero ver dentro de TDBS cuantos datos son tipo DATA
-memory_tdbs_data = module['Type']['Tdbs']['Data']
+memory_tdbs_data = DataTdbsMemory()
 
 #saco los porcentajes
 percentage_time_text = porc((memory_time_text), memory)
@@ -202,4 +221,4 @@ plt.subplot(3,1,3)
 plt.pie(data_types, labels = label, explode = explode)  # Dibuja un gráfico de quesitos
 plt.show()#muestro las tres gráficas
 
-XML()
+XML()#genero el xml
