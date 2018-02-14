@@ -1,0 +1,7 @@
+Preguntas TFG:
+
+1. ¿Cuántos modulos y tipos de datos hay?
+2. ¿Las gráficas están bien?
+3. ¿El xml está bien?
+4. ¿La manera de sacar los datos está bien?
+5. ¿Qué me quedaría por hacer?
