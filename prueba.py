@@ -128,30 +128,6 @@ def TypesMemory():#creo un diccionario con los tipos de datos y sus tamaños
 				typesmemory[j] = module[i][j]
 	return typesmemory
 
-def TimeMemory():
-    memory_time = module['time']['text'] + module['time']['data']
-    return memory_time
-
-def TdbsMemory():
-    memory_tdbs = module['tdbs']['text'] + module['tdbs']['data']
-    return memory_tdbs
-
-def TimeTextMemory():
-	memory_time_text = module['time']['text']
-	return memory_time_text
-
-def TdbsTextMemory():
-	memory_tdbs_text = module['tdbs']['text']
-	return memory_tdbs_text
-
-def DataTimeMemory():
-	memory_time_data = module['time']['data']
-	return memory_time_data
-
-def DataTdbsMemory():
-	memory_tdbs_data = module['tdbs']['data']
-	return memory_tdbs_data
-
 infile = open('texto.map', 'r')
 
 memory = 0
@@ -231,28 +207,20 @@ explode = [0, 0]
 plt.subplot(3,1,2)
 plt.pie(mod_types, labels = label, explode = explode)  # Dibuja un gráfico de quesitos
 
-# Ahora quiero ver dentro de TIME cuantos datos son tipo TEXT
-memory_time_text = TimeTextMemory()
+label_array = []
+perc_array = []
 
+for mods in module.keys():
+	for types in module[mods].keys():
+		percentage = porc((module[mods][types]), memory)
+		label_array.append(mods + ' (' + types + ') ' + str(percentage) + '%' )
+		perc_array.append(str(percentage))
 
-# Ahora quiero ver dentro de TDBS cuantos datos son tipo TEXT
-memory_tdbs_text = TdbsTextMemory()
-# Ahora quiero ver dentro de TIME cuantos datos son tipo DATA
-memory_time_data = DataTimeMemory()
-# Ahora quiero ver dentro de TDBS cuantos datos son tipo DATA
-memory_tdbs_data = DataTdbsMemory()
-
-#saco los porcentajes
-percentage_time_text = porc((memory_time_text), memory)
-percentage_tdbs_text = porc((memory_tdbs_text), memory)
-percentage_time_data = porc((memory_time_data), memory)
-percentage_tdbs_data = porc((memory_tdbs_data), memory)
 
 #Uno los datos y las etiquetas para la representación de datos
-data_types = [percentage_time_text, percentage_tdbs_text, percentage_time_data, percentage_tdbs_data]
-label = ["TEXT(Time)" + str(percentage_time_text) + " %", "TEXT(tdbs) " + str(percentage_tdbs_text) + "%", "DATA(time) " + str(percentage_time_data) + "%", "DATA(tdbs) " + str(percentage_tdbs_data) + "%"]
+data_types = perc_array
+label = label_array
 explode = [0, 0, 0, 0]
-
 #represento los datos
 plt.subplot(3,1,3)
 plt.pie(data_types, labels = label, explode = explode)  # Dibuja un gráfico de quesitos
