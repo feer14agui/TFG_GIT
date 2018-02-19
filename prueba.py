@@ -138,7 +138,6 @@ for line in infile:
         print 'Módulo: ' + mod + '\n'
 
     AddDicc(types)#Meto los valores en el diccionario
-print module
 
 #creo los diccionarios con los modulos y los tipos para poder sacar los datos bien al representar
 Mod_Memory = ModMemory()
@@ -157,11 +156,14 @@ for types in Types_Memory.keys():
 #Uno los datos y las etiquetas para la representación de datos
 data_types = data_array
 label = label_array
-explode = [0,0]
+explode = []
+for i in range(len(data_array)):
+	explode.append(0)
+
+explode = explode
 
 #represento los datos
 plt.subplot(3,1,1)
-print label
 plt.pie(data_types, labels = label, explode = explode)  # Dibuja un gráfico de quesitos
 
 #Creo arrays para meter los datos en label
@@ -178,7 +180,10 @@ for mods in Mod_Memory.keys():
 #Uno los datos y las etiquetas para la representación de datos
 mod_types = mod_array
 label = label_array
-explode = [0, 0]
+explode = []
+for i in range(len(data_array)):
+	explode.append(0)
+explode = explode
 
 #represento los datos
 plt.subplot(3,1,2)
@@ -197,7 +202,10 @@ for mods in module.keys():
 #Uno los datos y las etiquetas para la representación de datos
 data_types = perc_array
 label = label_array
-explode = [0, 0, 0, 0]
+explode = []
+for i in range(len(perc_array)):
+	explode.append(0)
+explode = explode
 #represento los datos
 plt.subplot(3,1,3)
 plt.pie(data_types, labels = label, explode = explode)  # Dibuja un gráfico de quesitos
