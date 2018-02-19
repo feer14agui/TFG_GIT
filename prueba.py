@@ -31,53 +31,30 @@ def XML ():
 	ptext = doc.createTextNode(str(memory) + ' bytes')
 	atributo.appendChild(ptext)
 
-	atributo = doc.createElement("atributo")
-	data.appendChild(atributo)
-	atributo.setAttribute("Nombre", "Memoria Text")
-	ptext = doc.createTextNode(str(memory_text) + ' bytes -- ' + str(percentage_text) + '% ')
-	atributo.appendChild(ptext)
+	for types in Types_Memory.keys():
+		atributo = doc.createElement("atributo")
+		data.appendChild(atributo)
+		atributo.setAttribute("Nombre", "Memoria " + str(types))
+		percentage = porc((Types_Memory[types]), memory)
+		ptext = doc.createTextNode( str(Types_Memory[types]) + ' bytes -- ' + str(percentage) + '% ')
+		atributo.appendChild(ptext)
 
-	atributo = doc.createElement("atributo")
-	data.appendChild(atributo)
-	atributo.setAttribute("Nombre", "Memoria Data")
-	ptext = doc.createTextNode(str(memory_data) + ' bytes -- ' + str(percentage_data) + '% ')
-	atributo.appendChild(ptext)
+	for mods in Mod_Memory.keys():
+		atributo = doc.createElement("atributo")
+		data.appendChild(atributo)
+		atributo.setAttribute("Nombre", "Memoria " + str(mods))
+		percentage = porc((Mod_Memory[mods]), memory)
+		ptext = doc.createTextNode( str(Mod_Memory[mods]) + ' bytes -- ' + str(percentage) + '% ')
+		atributo.appendChild(ptext)
 
-	atributo = doc.createElement("atributo")
-	data.appendChild(atributo)
-	atributo.setAttribute("Nombre", "Memoria Time")
-	ptext = doc.createTextNode(str(memory_time) + ' bytes -- ' + str(percentage_time) + '% ')
-	atributo.appendChild(ptext)
-
-	atributo = doc.createElement("atributo")
-	data.appendChild(atributo)
-	atributo.setAttribute("Nombre", "Memoria Tdbs")
-	ptext = doc.createTextNode(str(memory_tdbs) + ' bytes -- ' + str(percentage_tdbs) + '% ')
-	atributo.appendChild(ptext)
-
-	atributo = doc.createElement("atributo")
-	data.appendChild(atributo)
-	atributo.setAttribute("Nombre", "Memoria Time Text")
-	ptext = doc.createTextNode(str(memory_time_text) + ' bytes -- ' + str(percentage_time_text) + '% ')
-	atributo.appendChild(ptext)
-
-	atributo = doc.createElement("atributo")
-	data.appendChild(atributo)
-	atributo.setAttribute("Nombre", "Memoria Tdbs Text")
-	ptext = doc.createTextNode(str(memory_tdbs_text) + ' bytes -- ' + str(percentage_tdbs_text) + '% ')
-	atributo.appendChild(ptext)
-
-	atributo = doc.createElement("atributo")
-	data.appendChild(atributo)
-	atributo.setAttribute("Nombre", "Memoria Time Data")
-	ptext = doc.createTextNode(str(memory_time_data) + ' bytes -- ' + str(percentage_time_data) + '% ')
-	atributo.appendChild(ptext)
-
-	atributo = doc.createElement("atributo")
-	data.appendChild(atributo)
-	atributo.setAttribute("Nombre", "Memoria Tdbs Data")
-	ptext = doc.createTextNode(str(memory_tdbs_data) + ' bytes -- ' + str(percentage_tdbs_data) + '% ')
-	atributo.appendChild(ptext)
+	for mods in module.keys():
+		for types in module[mods].keys():
+			atributo = doc.createElement("atributo")
+			data.appendChild(atributo)
+			atributo.setAttribute("Nombre", "Memoria " + str(mods) + '(' + str(types) + ')')
+			percentage = porc((module[mods][types]), memory)
+			ptext = doc.createTextNode( str(module[mods][types]) + ' bytes -- ' + str(percentage) + '% ')
+			atributo.appendChild(ptext)
 
 	fich =  open('fichero.xml', 'w')
 	xml = doc.toprettyxml(indent=" ")
@@ -226,4 +203,4 @@ plt.subplot(3,1,3)
 plt.pie(data_types, labels = label, explode = explode)  # Dibuja un gráfico de quesitos
 plt.show()#muestro las tres gráficas
 
-#XML()#genero el xml
+XML()#genero el xml
