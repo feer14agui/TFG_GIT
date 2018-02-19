@@ -83,49 +83,73 @@ def XML ():
 	xml = doc.toprettyxml(indent=" ")
 	fich.write(xml)
 
-def AddDicc():
+def AddDicc(types):
 	#Con esto meto el tamaño de datos en los diccionarios segun el modulo y el tipo de datos
-    if mod == 'time': #si el modulo que tengo es time
-        if types == '.text':
-            module['Time']['Text'] = int(size) +  module['Time']['Text']#sumo la memoria de cada modulo y tipo
-        if types == '.data':
-            module['Time']['Data'] = int(size) +  module['Time']['Data']#sumo la memoria de cada modulo y tipo
-    elif mod == 'tdbs': #si el modulo que tengo es tdbs
-        if types == '.text':
-            module['Tdbs']['Text'] = int(size) +  module['Tdbs']['Text']#sumo la memoria de cada modulo y tipo
-        if types == '.data':
-            module['Tdbs']['Data'] = int(size) +  module['Tdbs']['Data']#sumo la memoria de cada modulo y tipo
+	claves = module.keys() #obtengo todas las claves del diccionario
+	if module.has_key(mod):#busco el modulo en el diccionario
+		types = types.split('.')
 
-def TextMemory():
-    memory_text = module['Time']['Text'] + module['Tdbs']['Text']
-    return memory_text
+		try:
+			types = types[1]#separo el punto de .text para quedarme con text
+		except IndexError:
+			types = 'null'
 
-def DataMemory():
-    memory_data = module['Time']['Data'] + module['Tdbs']['Data']
-    return memory_data
+		if types in module[mod].keys():#busco el tipo de datos en el diccionario
+			module[mod][types] = int(size) + module[mod][types]#meto el tamaño del tipo y modulo en el diccionario
+		elif not types in module[mod].keys() and types != 'null':
+			module[mod].setdefault(types, 0)
+			module[mod][types] = int(size) + module[mod][types]#meto el tamaño del tipo y modulo en el diccionario
+	else:#si no encuentro el modulo en el diccionarios
+		types = types.split('.')
+
+		try:
+			types = types[1]#separo el punto de .text para quedarme con text
+		except IndexError:
+			types = 'null'
+
+		module[mod] = {types: 0}
+		module[mod][types] = int(size) + module[mod][types]#meto el tamaño del tipo y modulo en el diccionario
+
+def ModMemory():#Creo un diccionario con los modulos y sus tamaños
+	for i in module.keys():
+		for j in module[i].keys():
+			if modmemory.has_key(i):
+				modmemory[i] = module[i][j] + modmemory[i]
+			else:
+				modmemory[i] = module[i][j]
+	return modmemory
+
+def TypesMemory():#creo un diccionario con los tipos de datos y sus tamaños
+	for i in module.keys():
+		for j in module[i].keys():
+			if typesmemory.has_key(j):
+				typesmemory[j] = module[i][j] + typesmemory[j]
+			else:
+				typesmemory[j] = module[i][j]
+	return typesmemory
 
 def TimeMemory():
-    memory_time = module['Time']['Text'] + module['Time']['Data']
+    memory_time = module['time']['text'] + module['time']['data']
     return memory_time
 
 def TdbsMemory():
-    memory_tdbs = module['Tdbs']['Text'] + module['Tdbs']['Data']
+    memory_tdbs = module['tdbs']['text'] + module['tdbs']['data']
     return memory_tdbs
 
 def TimeTextMemory():
-	memory_time_text = module['Time']['Text']
+	memory_time_text = module['time']['text']
 	return memory_time_text
 
 def TdbsTextMemory():
-	memory_tdbs_text = module['Tdbs']['Text']
+	memory_tdbs_text = module['tdbs']['text']
 	return memory_tdbs_text
 
 def DataTimeMemory():
-	memory_time_data = module['Time']['Data']
+	memory_time_data = module['time']['data']
 	return memory_time_data
 
 def DataTdbsMemory():
-	memory_tdbs_data = module['Tdbs']['Data']
+	memory_tdbs_data = module['tdbs']['data']
 	return memory_tdbs_data
 
 infile = open('texto.map', 'r')
@@ -134,7 +158,9 @@ memory = 0
 
 i=0
 
-module = {'Time':{'Text':0, 'Data':0}, 'Tdbs' :{'Text':0, 'Data':0}}
+module = {}
+modmemory = {}
+typesmemory = {}
 
 for line in infile:
 
@@ -158,41 +184,52 @@ for line in infile:
         print 'Tamaño de datos: ' + size + ' bytes'
         print 'Módulo: ' + mod + '\n'
 
-    AddDicc()#Meto los valores en el diccionario
+    AddDicc(types)#Meto los valores en el diccionario
+print module
 
-# Con esto voy a recopilar datos para escribir lo que ocupa cada tipo de datos
-memory_text = TextMemory()
-memory_data = DataMemory()
+#creo los diccionarios con los modulos y los tipos para poder sacar los datos bien al representar
+Mod_Memory = ModMemory()
+Types_Memory = TypesMemory()
+#Creo arrays para meter los dados en label
+label_array = []
+data_array = []
+#saco del diccionario de types los porcentajes y nombres para la representacion
+for types in Types_Memory.keys():
+	typememory = Types_Memory[types]
+	percentagetype = porc((typememory),memory)
+	label_array.append(types + ' ' + str(percentagetype) + '%')
+	data_array.append(str(percentagetype))
 
-#saco los porcentajes
-percentage_text = porc((memory_text), memory)
-percentage_data = porc((memory_data), memory)
 
 #Uno los datos y las etiquetas para la representación de datos
-data_types=[percentage_text, percentage_data]
-label = ["Text " + str(percentage_text) + " %", "Data " + str(percentage_data) + " %"]
+data_types = data_array
+label = label_array
 explode = [0,0]
 
 #represento los datos
 plt.subplot(3,1,1)
+print label
 plt.pie(data_types, labels = label, explode = explode)  # Dibuja un gráfico de quesitos
 
-# Con esto voy a recopilar datos para escribir lo que ocupa cada tipo de datos
-memory_time = TimeMemory()
-memory_tdbs = TdbsMemory()
+#Creo arrays para meter los datos en label
+label_array = []
+mod_array = []
+#Saco los modulos y sus porcentajes para la representacion de datos
+for mods in Mod_Memory.keys():
+	modmemory = Mod_Memory[mods]
+	percentagemod = porc((modmemory),memory)
+	label_array.append(mods + ' ' + str(percentagemod) + '%')
+	mod_array.append(str(percentagemod))
 
-#saco los porcentajes
-percentage_time = porc((memory_time), memory)
-percentage_tdbs = porc((memory_tdbs), memory)
 
 #Uno los datos y las etiquetas para la representación de datos
-data_types = [percentage_time, percentage_tdbs]
-label = ["Time " + str(percentage_time) + " %", "Tdbs " + str(percentage_tdbs) + "%"]
+mod_types = mod_array
+label = label_array
 explode = [0, 0]
 
 #represento los datos
 plt.subplot(3,1,2)
-plt.pie(data_types, labels = label, explode = explode)  # Dibuja un gráfico de quesitos
+plt.pie(mod_types, labels = label, explode = explode)  # Dibuja un gráfico de quesitos
 
 # Ahora quiero ver dentro de TIME cuantos datos son tipo TEXT
 memory_time_text = TimeTextMemory()
@@ -221,4 +258,4 @@ plt.subplot(3,1,3)
 plt.pie(data_types, labels = label, explode = explode)  # Dibuja un gráfico de quesitos
 plt.show()#muestro las tres gráficas
 
-XML()#genero el xml
+#XML()#genero el xml
