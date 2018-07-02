@@ -28,6 +28,7 @@ def XML ():
         i = i + 1
         field2 = ET.SubElement(doc2, "Memoria-" + str(types))
         percentage = porc((Types_Memory[types]), memory)
+        percentage = round(percentage,2)
         ptext = ( str(Types_Memory[types]) + ' ' + str(percentage))
         field2.text = ptext
 
@@ -36,6 +37,7 @@ def XML ():
         i = i + 1
         field3 = ET.SubElement(doc3, "Memoria-" + str(mods))
         percentage = porc((Mod_Memory[mods]), memory)
+        percentage = round(percentage,2)
         ptext =( str(Mod_Memory[mods]) + ' ' + str(percentage))
         field3.text = ptext
 
@@ -45,6 +47,7 @@ def XML ():
             i = i + 1
             field4 = ET.SubElement(doc4, "Memoria-" + str(mods) + "-" + str(types))
             percentage = porc((module[mods][types]), memory)
+            percentage = round(percentage,2)
             ptext = ( str(module[mods][types]) + ' ' + str(percentage))
             field4.text = ptext
 
@@ -98,49 +101,41 @@ def TypesMemory():#creo un diccionario con los tipos de datos y sus tamaños
                 typesmemory[j] = module[i][j]
     return typesmemory
 
-infile = open(sys.argv[1], 'r')
+for i in sys.argv:
+    infile = open(i, 'r')
 
-memory = 0
+    memory = 0
 
-i=0
+    i=0
 
-module = {}
-modmemory = {}
-typesmemory = {}
-expresion = r'(\.\w{3,15}\s{0,10}0x\w{5,20}\s{3,10}0x\w{2,5} .{0,100})'
-for line in infile:
-    patron = re.search(expresion, line)
-    if patron:
-        find = re.findall(expresion, line)
-        patron=line.split("/")
-        cad=patron[0]
-        cad=cad.split()
-        types=cad[0]
+    module = {}
+    modmemory = {}
+    typesmemory = {}
+    expresion = r'(\.\w{3,15}\s{0,10}0x\w{5,20}\s{3,10}0x\w{2,5} .{0,100})'
+    for line in infile:
+        patron = re.search(expresion, line)
+        if patron:
+            find = re.findall(expresion, line)
+            patron=line.split("/")
+            cad=patron[0]
+            cad=cad.split()
+            types=cad[0]
 
-        if cad[0][0:1] == '.':#uso este if para quitarme las líneas que no debo de coger
-           print cad
-           mod = patron[-1]#obtengo el módulo de cada línea
-           mod = mod.split(".")
-           mod = mod[0]
-           size=cad[2]#obtengo el tamaño de los datos
-           print "size " + str(size)
-           try:#excepcion por si hay más de un espacio antes de size
-               size = HexadecimalToDecimal(size)#paso el tamaño a decimal
+            if cad[0][0:1] == '.':#uso este if para quitarme las líneas que no debo de coger
+               mod = patron[-1]#obtengo el módulo de cada línea
+               mod = mod.split(".")
+               mod = mod[0]
+               size=cad[2]#obtengo el tamaño de los datos
+               try:#excepcion por si hay más de un espacio antes de size
+                   size = HexadecimalToDecimal(size)#paso el tamaño a decimal
 
-           except ValueError:
-               size=cad[2]
-               size = HexadecimalToDecimal(size)#paso el tamaño a decimal
-           memory = memory + int(size)#sumo la memoria total
-
-    #Esto me sirve para ver que va cogiendo bien la lineas
-        if types[0:1] == '.':#uso esto para quitarme las líneas que no debo de coger
-            i = i + 1
-            print 'Datos de la línea número ' + str(i) + '\n'
-            print 'Tipo de datos: ' + types
-            print 'Tamaño de datos: ' + str(size) + ' bytes'
-            print 'Módulo: ' + mod + '\n'
+               except ValueError:
+                   size=cad[2]
+                   size = HexadecimalToDecimal(size)#paso el tamaño a decimal
+               memory = memory + int(size)#sumo la memoria total
 
             AddDicc(types)#Meto los valores en el diccionario
+
 
 #creo los diccionarios con los modulos y los tipos para poder sacar los datos bien al representar
 Mod_Memory = ModMemory()
@@ -155,7 +150,7 @@ for types in Types_Memory.keys():
     typememory = Types_Memory[types]
     percentagetype = porc((typememory),memory)
     percentagetype = round(percentagetype,2)
-    if percentagetype <= 1:#Utilizo esta condición para los datos con menos de un 1%
+    if percentagetype <= 2:#Utilizo esta condición para los datos con menos de un 1%
         otherpercentage = percentagetype + otherpercentage
     else:
         label_array.append(types + ' ' + str(percentagetype) + '%')
@@ -179,7 +174,7 @@ explode = explode
 #represento los datos
 plt.title("Porcentajes de los tipos de datos")
 plt.pie(data_types, labels = label, explode = explode)  # Dibuja un gráfico de quesitos
-plt.legend(label)
+plt.legend(label,loc="upper left")
 plt.show()
 
 #Creo arrays para meter los datos en label
@@ -193,7 +188,7 @@ for mods in Mod_Memory.keys():
     modmemory = Mod_Memory[mods]
     percentagemod = porc((modmemory),memory)
     percentagemod = round(percentagemod,2)
-    if percentagemod < 1: #Usamos esta condición para los módulos menos a 1%
+    if percentagemod < 2: #Usamos esta condición para los módulos menos a 1%
         otherpercentage = percentagemod + otherpercentage
     else:
         label_array.append(mods + ' ' + str(percentagemod) + '%')
@@ -216,7 +211,7 @@ explode = explode
 #represento los datos
 plt.title("Porcentajes de los tipos de modulos")
 plt.pie(mod_types, labels = label, explode = explode)  # Dibuja un gráfico de quesitos
-plt.legend(label)
+plt.legend(label, loc = "upper right")
 plt.show()
 
 label_array = []
@@ -249,7 +244,7 @@ explode = explode
 #represento los datos
 plt.title("Porcentaje por tipo de datos y modulo")
 plt.pie(data_types, labels = label, explode = explode)  # Dibuja un gráfico de quesitos
-plt.legend(label)
+plt.legend(label, loc = "lower right")
 plt.show()#muestro las tres gráficas
 
 XML()#genero el xml
