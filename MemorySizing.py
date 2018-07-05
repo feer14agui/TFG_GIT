@@ -52,7 +52,7 @@ def XML (): #función para crear el fichero XML
             field4.text = ptext
 
     tree = ET.ElementTree(root)
-    tree.write("filename.xml")
+    tree.write("DataBase.xml")
     #xml = doc.toprettyxml(indent=" ")
     #fich.write(xml)
 
